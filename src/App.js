@@ -1,25 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import { Component } from "react";
+import Quote from "./components/quote/quote.component";
+import "./App.css";
+import FavoriteList from "./components/favorite-list/favorite.component";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      quote: {},
+      favoriteQuotes: [],
+    };
+  }
+
+  componentDidMount() {
+    this.getRandomQuote();
+  }
+
+  getRandomQuote() {
+    fetch("https://api.quotable.io/random")
+      .then((response) => response.json())
+      .then((response) => {
+        this.setState({
+          quote: response,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  render() {
+    const { quote, favoriteQuotes } = this.state;
+    const { getRandomQuote } = this;
+
+    return (
+      <div className="App">
+        <header className="App-header">
+          <button>Favorites</button>
+          <button>Generator</button>
+
+          <h1>Quotes App</h1>
+
+          <Quote randomQoute={quote} />
+
+          <button onClick={getRandomQuote}>new Quote</button>
+
+          <FavoriteList favoriteQuotes={favoriteQuotes} />
+        </header>
+      </div>
+    );
+  }
 }
 
 export default App;
